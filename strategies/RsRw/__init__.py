@@ -15,11 +15,8 @@ candle2 = None
 candle3 = None
 
 lincandles = [None, None, None, None, None, None]
-rolling_change = [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-                  None, None, None, None]
-rolling_RRSW = [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-                None,
-                None, None, None, None]
+rolling_change = []
+rolling_RRSW = []
 
 echange = None
 scandle1 = None
@@ -28,6 +25,8 @@ scandle3 = None
 
 sprice = 0
 price = 0
+
+k = 0
 
 
 class RsRw(Strategy):
@@ -61,33 +60,44 @@ class RsRw(Strategy):
         self.log("The certainty is: " + str(c))
         return c
 
+    def dna(self) -> str:
+        return 'iWnXO'
+
     def hyperparameters(self) -> list:
         return [
-            {'name': 'certainty_multiplier', 'type': int, 'min': 0, 'max': 1, 'default': .95},
-            {'name': 'positive_change_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': .001},
-            {'name': 'negative_change_multiplier', 'type': float, 'min': -1, 'max': 0, 'default': -.001},
-            {'name': 'close_change_rate_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': .95},
-
-                ]
+            {'name': 'certainty_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.95},
+            {'name': 'positive_change_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.06},
+            {'name': 'negative_change_multiplier', 'type': float, 'min': -1, 'max': 0, 'default': -0.06},
+            {'name': 'close_change_rate_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.7},
+            {'name': 'rolling_length', 'type': int, 'min': 1, 'max': 100, 'default': 20},
+        ]
 
     def before(self) -> None:
 
         global lincandles
-        while lincandles[5] is None:
+        linlength = 5
+        while lincandles[linlength] is None:
             if lincandles[0] is None:
                 lincandles[0] = self.cal_RRSW()
+                return
             elif lincandles[1] is None:
                 lincandles[1] = self.cal_RRSW()
+                return
             elif lincandles[2] is None:
                 lincandles[2] = self.cal_RRSW()
+                return
             elif lincandles[3] is None:
                 lincandles[3] = self.cal_RRSW()
+                return
             elif lincandles[4] is None:
                 lincandles[4] = self.cal_RRSW()
+                return
             elif lincandles[5] is None:
                 lincandles[5] = self.cal_RRSW()
+                return
+        self.log("Linlength complete")
 
-        if lincandles[5] is not None:
+        if lincandles[linlength] is not None:
             # Move the second value to the third and so on and make the first value self.cal_RRSW()
             lincandles[0] = lincandles[1]
             lincandles[1] = lincandles[2]
@@ -96,125 +106,41 @@ class RsRw(Strategy):
             lincandles[4] = lincandles[5]
             lincandles[5] = self.cal_RRSW()
 
+        self.log("LinSort complete")
+
         # Change the values of Rolling_Change which is 21 in length, starting at zero replacing the values with
         # self.cal_changeRate()
 
         global rolling_change
         global rolling_RRSW
-        while rolling_change[20] is None:
-            if rolling_change[0] is None:
-                rolling_change[0] = self.cal_changeRate()
-                rolling_RRSW[0] = self.cal_RRSW()
-            elif rolling_change[1] is None:
-                rolling_change[1] = self.cal_changeRate()
-                rolling_RRSW[1] = self.cal_RRSW()
-            elif rolling_change[2] is None:
-                rolling_change[2] = self.cal_changeRate()
-                rolling_RRSW[2] = self.cal_RRSW()
-            elif rolling_change[3] is None:
-                rolling_change[3] = self.cal_changeRate()
-                rolling_RRSW[3] = self.cal_RRSW()
-            elif rolling_change[4] is None:
-                rolling_change[4] = self.cal_changeRate()
-                rolling_RRSW[4] = self.cal_RRSW()
-            elif rolling_change[5] is None:
-                rolling_change[5] = self.cal_changeRate()
-                rolling_RRSW[5] = self.cal_RRSW()
-            elif rolling_change[6] is None:
-                rolling_change[6] = self.cal_changeRate()
-                rolling_RRSW[6] = self.cal_RRSW()
-            elif rolling_change[7] is None:
-                rolling_change[7] = self.cal_changeRate()
-                rolling_RRSW[7] = self.cal_RRSW()
-            elif rolling_change[8] is None:
-                rolling_change[8] = self.cal_changeRate()
-                rolling_RRSW[8] = self.cal_RRSW()
-            elif rolling_change[9] is None:
-                rolling_change[9] = self.cal_changeRate()
-                rolling_RRSW[9] = self.cal_RRSW()
-            elif rolling_change[10] is None:
-                rolling_change[10] = self.cal_changeRate()
-                rolling_RRSW[10] = self.cal_RRSW()
-            elif rolling_change[11] is None:
-                rolling_change[11] = self.cal_changeRate()
-                rolling_RRSW[11] = self.cal_RRSW()
-            elif rolling_change[12] is None:
-                rolling_change[12] = self.cal_changeRate()
-                rolling_RRSW[12] = self.cal_RRSW()
-            elif rolling_change[13] is None:
-                rolling_change[13] = self.cal_changeRate()
-                rolling_RRSW[13] = self.cal_RRSW()
-            elif rolling_change[14] is None:
-                rolling_change[14] = self.cal_changeRate()
-                rolling_RRSW[14] = self.cal_RRSW()
-            elif rolling_change[15] is None:
-                rolling_change[15] = self.cal_changeRate()
-                rolling_RRSW[15] = self.cal_RRSW()
-            elif rolling_change[16] is None:
-                rolling_change[16] = self.cal_changeRate()
-                rolling_RRSW[16] = self.cal_RRSW()
-            elif rolling_change[17] is None:
-                rolling_change[17] = self.cal_changeRate()
-                rolling_RRSW[17] = self.cal_RRSW()
-            elif rolling_change[18] is None:
-                rolling_change[18] = self.cal_changeRate()
-                rolling_RRSW[18] = self.cal_RRSW()
-            elif rolling_change[19] is None:
-                rolling_change[19] = self.cal_changeRate()
-                rolling_RRSW[19] = self.cal_RRSW()
-            elif rolling_change[20] is None:
-                rolling_change[20] = self.cal_changeRate()
-                rolling_RRSW[20] = self.cal_RRSW()
-        if rolling_change[20] is not None:
+        global k
+
+        while k <= self.hp['rolling_length']:
+            rolling_change.insert(self.hp['rolling_length'] - k, self.cal_changeRate())
+            rolling_RRSW.insert(self.hp['rolling_length'] - k, self.cal_RRSW())
+            self.log("K is " + str(k))
+            k += 1
+            return
+
+        self.log("Rolling complete")
+
+        if len(rolling_change) >= self.hp['rolling_length']:
             # Move the second value to the third and so on and make the first value self.cal_changeRate()
 
-            rolling_change[0] = rolling_change[1]
-            rolling_change[1] = rolling_change[2]
-            rolling_change[2] = rolling_change[3]
-            rolling_change[3] = rolling_change[4]
-            rolling_change[4] = rolling_change[5]
-            rolling_change[5] = rolling_change[6]
-            rolling_change[6] = rolling_change[7]
-            rolling_change[7] = rolling_change[8]
-            rolling_change[8] = rolling_change[9]
-            rolling_change[9] = rolling_change[10]
-            rolling_change[10] = rolling_change[11]
-            rolling_change[11] = rolling_change[12]
-            rolling_change[12] = rolling_change[13]
-            rolling_change[13] = rolling_change[14]
-            rolling_change[14] = rolling_change[15]
-            rolling_change[15] = rolling_change[16]
-            rolling_change[16] = rolling_change[17]
-            rolling_change[17] = rolling_change[18]
-            rolling_change[18] = rolling_change[19]
-            rolling_change[19] = rolling_change[20]
-            rolling_change[20] = self.cal_changeRate()
+            x = 0
+            while x < self.hp['rolling_length']:
+                rolling_change[x] = rolling_change[x + 1]
+                rolling_RRSW[x] = rolling_RRSW[x + 1]
+                x += 1
+            rolling_change[self.hp['rolling_length']] = self.cal_changeRate()
+            rolling_RRSW[self.hp['rolling_length']] = self.cal_RRSW()
 
-            rolling_RRSW[0] = rolling_RRSW[1]
-            rolling_RRSW[1] = rolling_RRSW[2]
-            rolling_RRSW[2] = rolling_RRSW[3]
-            rolling_RRSW[3] = rolling_RRSW[4]
-            rolling_RRSW[4] = rolling_RRSW[5]
-            rolling_RRSW[5] = rolling_RRSW[6]
-            rolling_RRSW[6] = rolling_RRSW[7]
-            rolling_RRSW[7] = rolling_RRSW[8]
-            rolling_RRSW[8] = rolling_RRSW[9]
-            rolling_RRSW[9] = rolling_RRSW[10]
-            rolling_RRSW[10] = rolling_RRSW[11]
-            rolling_RRSW[11] = rolling_RRSW[12]
-            rolling_RRSW[12] = rolling_RRSW[13]
-            rolling_RRSW[13] = rolling_RRSW[14]
-            rolling_RRSW[14] = rolling_RRSW[15]
-            rolling_RRSW[15] = rolling_RRSW[16]
-            rolling_RRSW[16] = rolling_RRSW[17]
-            rolling_RRSW[17] = rolling_RRSW[18]
-            rolling_RRSW[18] = rolling_RRSW[19]
-            rolling_RRSW[19] = rolling_RRSW[20]
-            rolling_RRSW[20] = self.cal_RRSW()
+            self.log("RollingSort complete")
 
     def should_long(self) -> bool:
-        if rolling_change[20] is not None:
-            if self.cal_changeRate() > self.hp['positive_change_multiplier'] and self.cal_certainty() > self.hp['certainty_multiplier']:
+        if len(rolling_change) >= self.hp['rolling_length']:
+            if self.cal_changeRate() > self.hp['positive_change_multiplier'] and self.cal_certainty() > self.hp[
+                'certainty_multiplier']:
                 global echange
                 echange = self.cal_changeRate()
                 return True
@@ -257,13 +183,14 @@ class RsRw(Strategy):
             #     return False
 
     def go_long(self):
-        qty = round(self.balance / self.close) / 1.5
+        qty = round(self.balance / self.close) / 1.1
         self.buy = qty, self.close
 
     def should_short(self) -> bool:
-        if rolling_change[20] is not None:
+        if len(rolling_change) >= self.hp['rolling_length']:
             # Move the second value to the third and so on and make the first value self.cal_changeRate(
-            if self.cal_changeRate() < self.hp['negative_change_multiplier'] and self.cal_certainty() > self.hp['certainty_multiplier']:
+            if self.cal_changeRate() < self.hp['negative_change_multiplier'] and self.cal_certainty() > self.hp[
+                'certainty_multiplier']:
                 global echange
                 echange = self.cal_changeRate()
                 return True
@@ -309,14 +236,6 @@ class RsRw(Strategy):
     def should_cancel_entry(self) -> bool:
         return False
 
-
-
-    # def hyperparameters(self) -> list:
-    #     return [
-    #         {'name': 'emultiple', 'type': 'float', 'min': 0, 'max': 1, 'default': .95},
-    #
-    #     ]
-
     def update_position(self):
         global candle1
         global candle2
@@ -328,7 +247,8 @@ class RsRw(Strategy):
 
         # two thirds of candle3
         if self.is_long:
-            if self.cal_changeRate() < echange * self.hp['close_change_rate_multiplier'] or self.cal_certainty() < 0.95:
+            if self.cal_changeRate() < echange * self.hp['close_change_rate_multiplier'] or self.cal_certainty() < \
+                    self.hp['certainty_multiplier']:
                 self.log("Cancelling at C3")
                 self.liquidate()
                 candle3 = None
@@ -336,7 +256,8 @@ class RsRw(Strategy):
                 scandle1 = None
                 return False
         if self.is_short:
-            if self.cal_changeRate() > echange * self.hp['close_change_rate_multiplier'] or self.cal_certainty() < 0.95:
+            if self.cal_changeRate() > echange * self.hp['close_change_rate_multiplier'] or self.cal_certainty() < \
+                    self.hp['certainty_multiplier']:
                 self.log("Cancelling at C3")
                 self.liquidate()
                 candle3 = None
