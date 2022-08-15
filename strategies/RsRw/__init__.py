@@ -34,7 +34,7 @@ class RsRw(Strategy):
     def cal_RRSW(self):
         _TickerSMA = ta.sma(candles=self.candles, period=21)
         _TickerChange = self.close - _TickerSMA
-        _RefCandles = self.get_candles(exchange='Binance Spot', symbol='USDT-DAI', timeframe='5m')
+        _RefCandles = self.get_candles(exchange='Binance Spot', symbol='USDT-DAI', timeframe='15m')
         _RefSMA = ta.sma(_RefCandles, period=21, source_type='close')
         _CurrentTime = self.candles
         _RefChange = ta.wclprice(candles=_RefCandles, sequential=False) - _RefSMA
@@ -55,22 +55,26 @@ class RsRw(Strategy):
         self.log("The change rate is: " + str(rate))
         return rate
 
+    def dna(self) -> str:
+        return 'f)chh'
+
     def cal_certainty(self):
         c, s = pearsonr(rolling_change, rolling_RRSW)
         self.log("The certainty is: " + str(c))
         return c
 
-    def dna(self) -> str:
-        return 'iWnXO'
-
     def hyperparameters(self) -> list:
         return [
-            {'name': 'certainty_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.95},
-            {'name': 'positive_change_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.06},
-            {'name': 'negative_change_multiplier', 'type': float, 'min': -1, 'max': 0, 'default': -0.06},
-            {'name': 'close_change_rate_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.7},
-            {'name': 'rolling_length', 'type': int, 'min': 1, 'max': 100, 'default': 20},
+            {'name': 'certainty_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.5822784810126582},
+            {'name': 'positive_change_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.13924050632911392},
+            {'name': 'negative_change_multiplier', 'type': float, 'min': -1, 'max': 0, 'default': 0},
+            {'name': 'close_change_rate_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.02531645569620253},
+            {'name': 'rolling_length', 'type': int, 'min': 8, 'max': 8, 'default': 8},
         ]
+
+    # def dna(self) -> str:
+    #     return 'j6an'
+    # j6an 54.48% profit -10.63% drawdown
 
     def before(self) -> None:
 
@@ -230,7 +234,7 @@ class RsRw(Strategy):
         #     return True
 
     def go_short(self):
-        qty = round(self.balance / self.close) / 1.5
+        qty = round(self.balance / self.close) / 1.1
         self.sell = qty, self.close
 
     def should_cancel_entry(self) -> bool:

@@ -1,0 +1,16 @@
+[INFO | 2022-08-15T18:09:08] Started a PAPER trading session. Running jesse v0.38.3 and jesse_live v0.38.3
+[INFO | 2022-08-15T18:09:09] Trading 1 routes with 1 extra routes:
+Binance Spot-BTC-USDT-15m
+
+Extra routes:
+Binance Spot-USDT-DAI-15m
+
+[INFO | 2022-08-15T18:09:09] Finished importing. Generating timeframes...
+[INFO | 2022-08-15T18:09:09] Finished importing. Generating timeframes...
+[INFO | 2022-08-15T18:09:22] Successfully opened WS connection to "wss://stream.binance.com:9443/stream?streams=btcusdt@kline_1m"
+[INFO | 2022-08-15T18:09:22] Successfully opened WS connection to "wss://stream.binance.com:9443/stream?streams=usdtdai@kline_1m"
+[INFO | 2022-08-15T18:15:00] The Current RRSW is -0.30180333709675033
+[INFO | 2022-08-15T18:30:00] The Current RRSW is -0.1727500557878812
+[INFO | 2022-08-15T18:45:00] The Current RRSW is -0.2166889291703628
+[INFO | 2022-08-15T19:00:00] The Current RRSW is -0.20514990804526137
+[INFO | 2022-08-15T19:15:00] The Current RRSW is -0.23674575530749264
