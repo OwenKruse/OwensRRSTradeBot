@@ -191,15 +191,16 @@ class RsRw(Strategy):
         self.buy = qty, self.close
 
     def should_short(self) -> bool:
-        if len(rolling_change) >= self.hp['rolling_length']:
-            # Move the second value to the third and so on and make the first value self.cal_changeRate(
-            if self.cal_changeRate() < self.hp['negative_change_multiplier'] and self.cal_certainty() > self.hp[
-                'certainty_multiplier']:
-                global echange
-                echange = self.cal_changeRate()
-                return True
-            else:
-                return False
+        pass
+        # if len(rolling_change) >= self.hp['rolling_length']:
+        #     # Move the second value to the third and so on and make the first value self.cal_changeRate(
+        #     if self.cal_changeRate() < self.hp['negative_change_multiplier'] and self.cal_certainty() > self.hp[
+        #         'certainty_multiplier']:
+        #         global echange
+        #         echange = self.cal_changeRate()
+        #         return True
+        #     else:
+        #         return False
         # global scandle1
         # global scandle2
         # global scandle3
