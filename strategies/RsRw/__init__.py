@@ -55,8 +55,8 @@ class RsRw(Strategy):
         self.log("The change rate is: " + str(rate))
         return rate
 
-    def dna(self) -> str:
-        return 'f)chh'
+        # def dna(self) -> str:
+        #     return 'f)chh'
 
     def cal_certainty(self):
         c, s = pearsonr(rolling_change, rolling_RRSW)
@@ -65,10 +65,10 @@ class RsRw(Strategy):
 
     def hyperparameters(self) -> list:
         return [
-            {'name': 'certainty_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.5822784810126582},
-            {'name': 'positive_change_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.13924050632911392},
-            {'name': 'negative_change_multiplier', 'type': float, 'min': -1, 'max': 0, 'default': 0},
-            {'name': 'close_change_rate_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.02531645569620253},
+            {'name': 'certainty_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.7848101265822784},
+            {'name': 'positive_change_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.012658227848101266},
+            {'name': 'negative_change_multiplier', 'type': float, 'min': -1, 'max': 0, 'default': -0.25316455696202533},
+            {'name': 'close_change_rate_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.810126582278481},
             {'name': 'rolling_length', 'type': int, 'min': 8, 'max': 8, 'default': 8},
         ]
 
@@ -191,15 +191,16 @@ class RsRw(Strategy):
         self.buy = qty, self.close
 
     def should_short(self) -> bool:
-        if len(rolling_change) >= self.hp['rolling_length']:
-            # Move the second value to the third and so on and make the first value self.cal_changeRate(
-            if self.cal_changeRate() < self.hp['negative_change_multiplier'] and self.cal_certainty() > self.hp[
-                'certainty_multiplier']:
-                global echange
-                echange = self.cal_changeRate()
-                return True
-            else:
-                return False
+        pass
+        # if len(rolling_change) >= self.hp['rolling_length']:
+        #     # Move the second value to the third and so on and make the first value self.cal_changeRate(
+        #     if self.cal_changeRate() < self.hp['negative_change_multiplier'] and self.cal_certainty() > self.hp[
+        #         'certainty_multiplier']:
+        #         global echange
+        #         echange = self.cal_changeRate()
+        #         return True
+        #     else:
+        #         return False
         # global scandle1
         # global scandle2
         # global scandle3
