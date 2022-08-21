@@ -32,14 +32,14 @@ k = 0
 class RsRw(Strategy):
 
     def cal_RRSW(self):
-        _TickerSMA = ta.sma(candles=self.candles, period=21)
+        _TickerSMA = ta.sma(candles=self.candles, period=self.hp['x1'])
         _TickerChange = self.close - _TickerSMA
         _RefCandles = self.get_candles(exchange='Binance Spot', symbol='USDT-DAI', timeframe='15m')
-        _RefSMA = ta.sma(_RefCandles, period=21, source_type='close')
+        _RefSMA = ta.sma(_RefCandles, period=self.hp['x2'], source_type='close')
         _CurrentTime = self.candles
         _RefChange = ta.wclprice(candles=_RefCandles, sequential=False) - _RefSMA
-        _AvgVol_long = ta.vwma(self.candles, period=5)
-        _AvgVol_short = ta.vwma(self.candles, period=21)
+        _AvgVol_long = ta.vwma(self.candles, period=self.hp['x3'])
+        _AvgVol_short = ta.vwma(self.candles, period=self.hp['x4'])
         _VolWeight = _AvgVol_long / _AvgVol_short
         _RRSW = (_TickerChange / _TickerSMA - _RefChange / _RefSMA) * _VolWeight * 100
         self.log("The Current RRSW is " + str(_RRSW))
@@ -55,8 +55,10 @@ class RsRw(Strategy):
         self.log("The change rate is: " + str(rate))
         return rate
 
-        # def dna(self) -> str:
-        #     return 'f)chh'
+    # def dna(self) -> str:
+    #     return 'b-gM7FrwO'
+    def dna(self) -> str:
+        return 'a-<17FXW4'
 
     def cal_certainty(self):
         c, s = pearsonr(rolling_change, rolling_RRSW)
@@ -69,7 +71,11 @@ class RsRw(Strategy):
             {'name': 'positive_change_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.012658227848101266},
             {'name': 'negative_change_multiplier', 'type': float, 'min': -1, 'max': 0, 'default': -0.25316455696202533},
             {'name': 'close_change_rate_multiplier', 'type': float, 'min': 0, 'max': 1, 'default': 0.810126582278481},
-            {'name': 'rolling_length', 'type': int, 'min': 8, 'max': 8, 'default': 8},
+            {'name': 'rolling_length', 'type': int, 'min': 6, 'max': 12, 'default': 8},
+            {'name': 'x1', 'type': int, 'min': 1, 'max': 30, 'default': 21},
+            {'name': 'x2', 'type': int, 'min': 1, 'max': 30, 'default': 21},
+            {'name': 'x3', 'type': int, 'min': 1, 'max': 30, 'default': 5},
+            {'name': 'x4', 'type': int, 'min': 1, 'max': 30, 'default': 21},
         ]
 
     # def dna(self) -> str:
@@ -144,7 +150,7 @@ class RsRw(Strategy):
     def should_long(self) -> bool:
         if len(rolling_change) >= self.hp['rolling_length']:
             if self.cal_changeRate() > self.hp['positive_change_multiplier'] and self.cal_certainty() > self.hp[
-                'certainty_multiplier']:
+                'certainty_multiplier'] and ta.sma(self.candles, period=200, source_type='close') < self.close:
                 global echange
                 echange = self.cal_changeRate()
                 return True
