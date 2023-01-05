@@ -1,22 +1,9 @@
-# Jesse Project Template
+# Real Relative Strength Trading Bot
 
-This is template from which you can create your own Jesse project. 
 
-## Usage
-Assuming that you already have installed the environment dependencies, you can run the following command to create your project:
+A trading bot that uses relative strength to determine entries and exits is a computer program that utilizes technical analysis to analyze the relative strength of various assets in the market. The bot utilizes this analysis to determine when to buy and sell these assets in order to generate profits for the user.
 
-```sh
-# you can change "my-project" to any name you want
-git clone https://github.com/jesse-ai/project-template.git my-project
-# to create a .env file of yours
-cp .env .env
-```
+To determine entry points, the bot looks for assets that are showing a strong relative strength compared to other assets in the market. For example, if the bot is analyzing the stock market, it may look for stocks that are outperforming the overall market and have a high relative strength. Once the bot has identified these strong assets, it will use this information to determine when to buy them in order to take advantage of their upward price momentum.
 
-Then while in the project run:
+In order to determine exit points, the bot will continue to monitor the relative strength of the assets that it has purchased. If the relative strength of the asset begins to weaken or the asset begins to underperform the overall market, the bot will use this information to determine when to sell the asset in order to minimize potential losses.
 
-```sh
-cd docker
-docker-compose up
-```
-
-That's it! Now open [localhost:9000](http://localhost:9000) in your browser to see the dashboard. 
